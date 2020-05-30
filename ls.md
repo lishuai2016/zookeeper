@@ -1,3 +1,49 @@
+当前代码基于版本tag3.6.0
+
+
+# 1、源码构建
+
+直接Git clone下来后执行clean install -Dmaven.test.skip=true或者clean package -Dmaven.test.skip=true即可
+
+
+
+
+
+# 遇到的问题
+
+1、运行主类QuorumPeerMain异常Caused by: java.lang.ClassNotFoundException: com.codahale.metrics.Reservoir
+
+```java
+D:\soft-install\jdk8\bin\java "-javaagent:D:\idea-2017-new\IntelliJ IDEA 2017.2.2\lib\idea_rt.jar=55969:D:\idea-2017-new\IntelliJ IDEA 2017.2.2\bin" -Dfile.encoding=UTF-8 -classpath D:\soft-install\jdk8\jre\lib\charsets.jar;D:\soft-install\jdk8\jre\lib\deploy.jar;D:\soft-install\jdk8\jre\lib\ext\access-bridge-64.jar;D:\soft-install\jdk8\jre\lib\ext\cldrdata.jar;D:\soft-install\jdk8\jre\lib\ext\dnsns.jar;D:\soft-install\jdk8\jre\lib\ext\jaccess.jar;D:\soft-install\jdk8\jre\lib\ext\jfxrt.jar;D:\soft-install\jdk8\jre\lib\ext\localedata.jar;D:\soft-install\jdk8\jre\lib\ext\nashorn.jar;D:\soft-install\jdk8\jre\lib\ext\sunec.jar;D:\soft-install\jdk8\jre\lib\ext\sunjce_provider.jar;D:\soft-install\jdk8\jre\lib\ext\sunmscapi.jar;D:\soft-install\jdk8\jre\lib\ext\sunpkcs11.jar;D:\soft-install\jdk8\jre\lib\ext\zipfs.jar;D:\soft-install\jdk8\jre\lib\javaws.jar;D:\soft-install\jdk8\jre\lib\jce.jar;D:\soft-install\jdk8\jre\lib\jfr.jar;D:\soft-install\jdk8\jre\lib\jfxswt.jar;D:\soft-install\jdk8\jre\lib\jsse.jar;D:\soft-install\jdk8\jre\lib\management-agent.jar;D:\soft-install\jdk8\jre\lib\plugin.jar;D:\soft-install\jdk8\jre\lib\resources.jar;D:\soft-install\jdk8\jre\lib\rt.jar;D:\opencode\zookeeper\zookeeper-server\target\classes;D:\maven-respo\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;D:\opencode\zookeeper\zookeeper-jute\target\classes;D:\maven-respo\org\apache\yetus\audience-annotations\0.5.0\audience-annotations-0.5.0.jar;D:\maven-respo\io\netty\netty-handler\4.1.48.Final\netty-handler-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-common\4.1.48.Final\netty-common-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-resolver\4.1.48.Final\netty-resolver-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-buffer\4.1.48.Final\netty-buffer-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-transport\4.1.48.Final\netty-transport-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-codec\4.1.48.Final\netty-codec-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-transport-native-epoll\4.1.48.Final\netty-transport-native-epoll-4.1.48.Final.jar;D:\maven-respo\io\netty\netty-transport-native-unix-common\4.1.48.Final\netty-transport-native-unix-common-4.1.48.Final.jar;D:\maven-respo\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;D:\maven-respo\org\slf4j\slf4j-log4j12\1.7.25\slf4j-log4j12-1.7.25.jar;D:\maven-respo\log4j\log4j\1.2.17\log4j-1.2.17.jar org.apache.zookeeper.server.quorum.QuorumPeerMain conf/zoo.cfg
+log4j:WARN No appenders could be found for logger (org.apache.zookeeper.server.quorum.QuorumPeerConfig).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+Exception in thread "main" java.lang.NoClassDefFoundError: com/codahale/metrics/Reservoir
+	at org.apache.zookeeper.metrics.impl.DefaultMetricsProvider$DefaultMetricsContext.lambda$getSummary$2(DefaultMetricsProvider.java:126)
+	at java.util.concurrent.ConcurrentHashMap.computeIfAbsent(ConcurrentHashMap.java:1660)
+	at org.apache.zookeeper.metrics.impl.DefaultMetricsProvider$DefaultMetricsContext.getSummary(DefaultMetricsProvider.java:122)
+	at org.apache.zookeeper.server.ServerMetrics.<init>(ServerMetrics.java:74)
+	at org.apache.zookeeper.server.ServerMetrics.<clinit>(ServerMetrics.java:44)
+	at org.apache.zookeeper.server.ZooKeeperServerMain.runFromConfig(ZooKeeperServerMain.java:132)
+	at org.apache.zookeeper.server.ZooKeeperServerMain.initializeAndRun(ZooKeeperServerMain.java:112)
+	at org.apache.zookeeper.server.ZooKeeperServerMain.main(ZooKeeperServerMain.java:67)
+	at org.apache.zookeeper.server.quorum.QuorumPeerMain.initializeAndRun(QuorumPeerMain.java:140)
+	at org.apache.zookeeper.server.quorum.QuorumPeerMain.main(QuorumPeerMain.java:90)
+Caused by: java.lang.ClassNotFoundException: com.codahale.metrics.Reservoir
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:349)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	... 10 more
+
+Process finished with exit code 1
+
+```
+
+
+解决思路：因为有些类引入是provided，把相关的provided去掉就行了
+
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!--
@@ -312,3 +358,9 @@
   </build>
 
 </project>
+
+```
+
+2、把conf目录的log4j复制到resources目录发现没有日志输出
+
+不知道为啥，下载下来的源码resources目标没有被Mark resources root，需要手动标记一下

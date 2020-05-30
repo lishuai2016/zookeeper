@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 @InterfaceAudience.Public
-public class QuorumPeerMain {
+public class QuorumPeerMain {//脚本启动入口主类
 
     private static final Logger LOG = LoggerFactory.getLogger(QuorumPeerMain.class);
 
@@ -136,7 +136,7 @@ public class QuorumPeerMain {
             runFromConfig(config);
         } else {
             LOG.warn("Either no config or no quorum defined in config, running in standalone mode");
-            // there is only server in the quorum -- run as standalone
+            // there is only server in the quorum -- run as standalone 运行单机模式
             ZooKeeperServerMain.main(args);
         }
     }

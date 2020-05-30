@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * This class starts and runs a standalone ZooKeeperServer.
  */
 @InterfaceAudience.Public
-public class ZooKeeperServerMain {
+public class ZooKeeperServerMain {//启动类入口
 
     private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperServerMain.class);
 
